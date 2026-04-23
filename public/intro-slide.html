@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINERBA Training Platform — Introduction</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy-900: #0a1628;
+      --navy-800: #0f1f3d;
+      --navy-700: #162952;
+      --navy-600: #1e3a6e;
+      --navy-500: #2a5298;
+      --navy-400: #4a72b8;
+      --navy-300: #7a9fd4;
+      --navy-200: #b3cbec;
+      --navy-100: #dde9f7;
+      --gold:     #c9a84c;
+      --gold-light: #e8c96a;
+      --red:      #dc2626;
+      --amber:    #d97706;
+      --green:    #16a34a;
+      --white:    #ffffff;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--navy-900);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Slide shell ─────────────────────────────── */
+    .slide {
+      width: 1280px;
+      min-height: 720px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 60%, #111d36 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative circles */
+    .slide::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,.08);
+      top: -200px; right: -200px;
+      pointer-events: none;
+    }
+    .slide::after {
+      content: '';
+      position: absolute;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,.06);
+      bottom: -120px; left: -100px;
+      pointer-events: none;
+    }
+
+    /* ── TOP BAR ─────────────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 52px 0;
+      position: relative;
+      z-index: 2;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .12em;
+      color: var(--white);
+    }
+    .brand-logo span { color: var(--gold); }
+    .brand-divider {
+      width: 1px; height: 28px;
+      background: rgba(255,255,255,.15);
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--navy-300);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .topbar-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: var(--navy-200);
+      font-weight: 500;
+    }
+    .topbar-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* ── MAIN BODY ───────────────────────────────── */
+    .body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 36px 52px 28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* LEFT column */
+    .left { padding-right: 52px; }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .headline {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 14px;
+      letter-spacing: -.02em;
+    }
+    .headline em {
+      font-style: normal;
+      color: var(--gold-light);
+    }
+    .subhead {
+      font-size: 14px;
+      color: var(--navy-200);
+      line-height: 1.65;
+      max-width: 440px;
+      margin-bottom: 28px;
+    }
+
+    /* Stat pills row */
+    .stats {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      padding: 8px 14px;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--navy-300);
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    /* PR outcome dots */
+    .pr-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .pr-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--navy-200);
+      font-weight: 500;
+    }
+    .pr-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .pr-count {
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* RIGHT column */
+    .right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-left: 1px solid rgba(255,255,255,.08);
+      padding-left: 52px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--navy-400);
+      margin-bottom: 8px;
+    }
+
+    /* Feature grid 2×3 */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .feat {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .feat-icon {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .feat-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .feat-desc {
+      font-size: 10.5px;
+      color: var(--navy-300);
+      line-height: 1.5;
+    }
+
+    /* Personas row */
+    .personas {
+      display: flex;
+      gap: 6px;
+    }
+    .persona-chip {
+      flex: 1;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .persona-chip .icon { font-size: 16px; display: block; margin-bottom: 3px; }
+    .persona-chip .name { font-size: 10px; font-weight: 700; color: var(--navy-100); line-height: 1.2; }
+    .persona-chip .diff { font-size: 9px; color: var(--navy-400); margin-top: 2px; }
+
+    /* industry badges */
+    .industries {
+      display: flex;
+      gap: 8px;
+    }
+    .ind-badge {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .ind-badge .ind-icon { font-size: 16px; }
+    .ind-badge .ind-name { font-size: 11px; font-weight: 700; color: var(--navy-100); }
+    .ind-badge .ind-count { font-size: 10px; color: var(--navy-400); margin-top: 1px; }
+
+    /* ── BOTTOM BAR ──────────────────────────────── */
+    .bottombar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px 28px;
+      position: relative;
+      z-index: 2;
+    }
+    .bottombar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .url-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,168,76,.12);
+      border: 1px solid rgba(201,168,76,.3);
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: .01em;
+    }
+    .url-chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+    .tech-stack {
+      display: flex;
+      gap: 8px;
+    }
+    .tech-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--navy-300);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 4px;
+      padding: 3px 8px;
+      letter-spacing: .04em;
+    }
+    .bottombar-right {
+      font-size: 11px;
+      color: var(--navy-400);
+      text-align: right;
+      line-height: 1.5;
+    }
+    .bottombar-right strong {
+      color: var(--navy-300);
+      font-weight: 600;
+    }
+
+    /* gold accent line under topbar */
+    .gold-line {
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, transparent 70%);
+      margin: 18px 52px 0;
+      position: relative;
+      z-index: 2;
+      border-radius: 1px;
+    }
+  </style>
+</head>
+<body>
+<div class="slide">
+
+  <!-- TOP BAR -->
+  <div>
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-logo">MIN<span>E</span>RBA</div>
+        <div class="brand-divider"></div>
+        <div class="brand-sub">Crisis Communications<br>Training Platform</div>
+      </div>
+      <div class="topbar-badge">
+        <div class="topbar-badge-dot"></div>
+        Rice Jones MBA · GFE Consulting Project · Spring 2026
+      </div>
+    </div>
+    <div class="gold-line"></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="eyebrow">AI-Powered Simulation Tool</div>
+      <h1 class="headline">
+        Train to advise<br>
+        companies in <em>crisis</em>
+      </h1>
+      <p class="subhead">
+        A bilingual platform that turns 38 landmark energy, mining, and healthcare crises into hands-on simulations — so consultants arrive client-ready, not learning on the job.
+      </p>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat-pill">
+          <div>
+            <div class="stat-val">38</div>
+            <div class="stat-label">Crisis Cases</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="stat-val">5</div>
+            <div class="stat-label">AI Adversaries</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="stat-val">5</div>
+            <div class="stat-label">Learning Paths</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="stat-val">14</div>
+            <div class="stat-label">Frameworks</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="stat-val">EN/ES</div>
+            <div class="stat-label">Bilingual</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PR outcomes -->
+      <div class="pr-row">
+        <div style="font-size:11px;color:var(--navy-400);font-weight:600;margin-right:4px;">PR Outcomes:</div>
+        <div class="pr-item">
+          <div class="pr-dot" style="background:#ef4444;"></div>
+          <span class="pr-count">17</span> Failed
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot" style="background:#f59e0b;"></div>
+          <span class="pr-count">11</span> Mixed
+        </div>
+        <div class="pr-item">
+          <div class="pr-dot" style="background:#22c55e;"></div>
+          <span class="pr-count">10</span> Effective
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <!-- Platform modules -->
+      <div class="section-label">Platform Modules</div>
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon">🎮</div>
+          <div>
+            <div class="feat-title">Live AI Simulation</div>
+            <div class="feat-desc">Chat with an AI playing a journalist, regulator, investor, community leader, or NGO director.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">⚡</div>
+          <div>
+            <div class="feat-title">Readiness Assessment</div>
+            <div class="feat-desc">12-question diagnostic yields a 0–100 score and personalised learning path recommendations.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🗺</div>
+          <div>
+            <div class="feat-title">Global Crisis Map</div>
+            <div class="feat-desc">Interactive world map — click any marker to open the full case study and start a simulation.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🎓</div>
+          <div>
+            <div class="feat-title">Learning Paths</div>
+            <div class="feat-desc">5 curated case sequences: LATAM energy, mining, pharma, anti-corruption, indigenous rights.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">🛡</div>
+          <div>
+            <div class="feat-title">Frameworks Library</div>
+            <div class="feat-desc">14 crisis frameworks (72-Hour Protocol, FPIC, SCCT, UNGP) with detail pages and case links.</div>
+          </div>
+        </div>
+        <div class="feat">
+          <div class="feat-icon">📊</div>
+          <div>
+            <div class="feat-title">Dataset Analytics</div>
+            <div class="feat-desc">Industry, region, and PR outcome breakdowns across all 38 cases with visual charts.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Personas -->
+      <div class="section-label" style="margin-top:6px;">AI Simulation Adversaries</div>
+      <div class="personas">
+        <div class="persona-chip">
+          <span class="icon">📰</span>
+          <div class="name">Journalist</div>
+          <div class="diff">Challenging</div>
+        </div>
+        <div class="persona-chip">
+          <span class="icon">⚖️</span>
+          <div class="name">Regulator</div>
+          <div class="diff">Very Challenging</div>
+        </div>
+        <div class="persona-chip">
+          <span class="icon">🏘</span>
+          <div class="name">Community<br>Leader</div>
+          <div class="diff">Expert</div>
+        </div>
+        <div class="persona-chip">
+          <span class="icon">💼</span>
+          <div class="name">Investor</div>
+          <div class="diff">Challenging</div>
+        </div>
+        <div class="persona-chip">
+          <span class="icon">🌿</span>
+          <div class="name">NGO<br>Director</div>
+          <div class="diff">Very Challenging</div>
+        </div>
+      </div>
+
+      <!-- Industries -->
+      <div class="section-label" style="margin-top:4px;">Industry Coverage</div>
+      <div class="industries">
+        <div class="ind-badge">
+          <div class="ind-icon">⛽</div>
+          <div>
+            <div class="ind-name">Energy & Oil</div>
+            <div class="ind-count">20 cases</div>
+          </div>
+        </div>
+        <div class="ind-badge">
+          <div class="ind-icon">⛏</div>
+          <div>
+            <div class="ind-name">Mining</div>
+            <div class="ind-count">10 cases</div>
+          </div>
+        </div>
+        <div class="ind-badge">
+          <div class="ind-icon">🏥</div>
+          <div>
+            <div class="ind-name">Healthcare</div>
+            <div class="ind-count">8 cases</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottombar">
+    <div class="bottombar-left">
+      <div class="url-chip">
+        <div class="url-chip-dot"></div>
+        localhost:3001 &nbsp;·&nbsp; Live Preview
+      </div>
+      <div class="tech-stack">
+        <span class="tech-tag">Next.js 14</span>
+        <span class="tech-tag">TypeScript</span>
+        <span class="tech-tag">Tailwind CSS</span>
+        <span class="tech-tag">Claude API</span>
+        <span class="tech-tag">next-intl</span>
+      </div>
+    </div>
+    <div class="bottombar-right">
+      <strong>Minerba Comunicación Corporativa</strong><br>
+      Rice Jones MBA GFE · Spring 2026
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

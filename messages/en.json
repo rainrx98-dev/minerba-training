@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "home": "Home",
+    "cases": "Case Studies",
+    "map": "Crisis Map",
+    "frameworks": "Frameworks",
+    "glossary": "Glossary",
+    "stats": "Stats",
+    "assessment": "Assessment",
+    "languageSwitch": "Español"
+  },
+  "home": {
+    "tagline": "Crisis Intelligence Training",
+    "subtitle": "Train your consultants on real PR crises — 38 cases across energy, mining, and healthcare. Structured simulations, bilingual, and built for LatAm.",
+    "stats": {
+      "cases": "Case Studies",
+      "crisisTypes": "Crisis Types",
+      "regions": "Regions"
+    },
+    "features": {
+      "browse": {
+        "title": "Browse Case Studies",
+        "description": "38 landmark crises across energy, mining, and healthcare — from Exxon Valdez to Novo Nordisk. Filter by industry, crisis type, region, and PR outcome.",
+        "cta": "Browse All Cases →"
+      },
+      "quiz": {
+        "title": "Crisis Simulation",
+        "description": "Step into the role of Minerba's lead consultant. The AI presents a real crisis as it unfolds and challenges your decision-making in real time.",
+        "cta": "Choose a Case to Simulate →"
+      },
+      "frameworks": {
+        "title": "Minerba Frameworks",
+        "description": "The 72-Hour Protocol, FPIC Checklist, and Anti-Corruption Market Entry Checklist — practical tools for LatAm energy sector engagements.",
+        "cta": "View Frameworks →"
+      }
+    },
+    "featured": "Featured Cases",
+    "latamBadge": "LATAM Relevant",
+    "featuredCta": "View Full Case →",
+    "startQuiz": "Simulate →",
+    "frameworksSection": {
+      "title": "Minerba Crisis Frameworks",
+      "subtitle": "Practical tools derived from this casebook — for real-world Latin American energy sector engagements.",
+      "protocol72": {
+        "title": "The 72-Hour Protocol",
+        "description": "Derived from the Exxon Valdez failure. The standard response window for energy sector crises in Latin America — with local adaptations.",
+        "col1": "Window",
+        "col2": "Required Action",
+        "col3": "Latin America Adaptation",
+        "row1_window": "0–2 hrs",
+        "row1_action": "Notify CEO · Activate spokesperson · Issue holding statement",
+        "row1_latam": "Statement in Spanish/Portuguese first · Alert community leaders directly",
+        "row2_window": "2–6 hrs",
+        "row2_action": "CEO on camera with empathy statement",
+        "row2_latam": "Local-language video via WhatsApp before national media",
+        "row3_window": "6–24 hrs",
+        "row3_action": "First full briefing · Establish twice-daily cadence",
+        "row3_latam": "Brief government ministries before press conference",
+        "row4_window": "24–48 hrs",
+        "row4_action": "Independent third-party monitoring announced",
+        "row4_latam": "Engage local university or NGO as monitor — not company-selected",
+        "row5_window": "48–72 hrs",
+        "row5_action": "Community support mechanism publicly committed",
+        "row5_latam": "CEO meets affected community in their space, not yours"
+      },
+      "fpic": {
+        "title": "FPIC / Consulta Previa Checklist",
+        "description": "Derived from Cases L1, L2, L3. For any energy operations in or near indigenous territories in Latin America.",
+        "item1": "Community baseline study conducted and published?",
+        "item2": "Consulta previa process initiated at least 12 months before operations?",
+        "item3": "Affected communities represented by their own chosen representatives?",
+        "item4": "Company publicly committed to genuine consent (not just notification)?",
+        "item5": "Community-governed benefit fund with independent oversight established?",
+        "item6": "Environmental monitoring results published in the community's language?"
+      },
+      "antiCorruption": {
+        "title": "Anti-Corruption Market Entry Checklist",
+        "description": "Derived from Cases 07, L2, L3. FCPA and local compliance requirements for LatAm energy market entry.",
+        "item1": "FCPA risk assessment completed for all planned jurisdictions?",
+        "item2": "Enhanced due diligence on all local agents, intermediaries, and consultants?",
+        "item3": "Anti-corruption warranties in all contracts with audit rights?",
+        "item4": "State energy partner corruption exposure assessed?",
+        "item5": "Internal anti-corruption reporting channel established and communicated?",
+        "item6": "Third-party anti-corruption audit programme publicly disclosed?",
+        "item7": "Multi-jurisdictional legal counsel engaged for coordinated regulatory response?"
+      }
+    }
+  },
+  "cases": {
+    "title": "Case Studies",
+    "subtitle": "38 landmark crises across energy, mining, and healthcare. Filter by industry, region, or PR outcome.",
+    "filters": {
+      "all": "All",
+      "region": "Region",
+      "global": "Global",
+      "latinAmerica": "Latin America",
+      "crisisType": "Crisis Type",
+      "environmental": "Environmental",
+      "fraud": "Fraud / Governance",
+      "corruption": "Corruption",
+      "ngo": "NGO Pressure",
+      "humanRights": "Human Rights",
+      "prRating": "PR Rating",
+      "failed": "Failed",
+      "mixed": "Mixed",
+      "effective": "Effective",
+      "clearFilters": "Clear filters"
+    },
+    "readCase": "Read Case",
+    "startQuiz": "Simulate",
+    "resultsCount": "{count} case studies"
+  },
+  "case": {
+    "backToCases": "← Back to Cases",
+    "testKnowledge": "Test Your Knowledge",
+    "startSimulation": "Start Crisis Simulation →",
+    "relatedCases": "Related Cases",
+    "prRating": "PR Rating",
+    "crisisType": "Crisis Type",
+    "region": "Region",
+    "sector": "Sector",
+    "year": "Year",
+    "company": "Company",
+    "country": "Country",
+    "simulateCta": "Ready to test yourself on this case?"
+  },
+  "quiz": {
+    "title": "Crisis Simulation",
+    "caseContext": "Case Context",
+    "instructions": "You are Minerba's lead crisis communications consultant. Respond to each scenario as you would in a real engagement. The AI will challenge your decisions and escalate the crisis.",
+    "inputPlaceholder": "Type your response as the Minerba consultant... (Enter to send, Shift+Enter for new line)",
+    "sendButton": "Send",
+    "endDebrief": "End & Get Debrief",
+    "debriefNote": "End the simulation at any time to receive a structured debrief and scoring.",
+    "facilitator": "Scenario Facilitator",
+    "you": "You",
+    "backToCase": "← Back to Case Study",
+    "newSession": "Start New Session",
+    "roundLabel": "Round"
+  },
+  "ratings": {
+    "failed": "Failed Response",
+    "mixed": "Mixed / Partial Recovery",
+    "effective": "Effective Response"
+  },
+  "common": {
+    "year": "Year",
+    "company": "Company",
+    "region": "Region",
+    "latam": "Latin America",
+    "global": "Global",
+    "readMore": "Read More",
+    "loading": "Loading...",
+    "minerba": "MINERBA"
+  }
+}

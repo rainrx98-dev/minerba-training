@@ -1,0 +1,156 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "cases": "Casos de Estudio",
+    "map": "Mapa de Crisis",
+    "frameworks": "Marcos de Trabajo",
+    "glossary": "Glosario",
+    "stats": "Estadísticas",
+    "assessment": "Diagnóstico",
+    "languageSwitch": "English"
+  },
+  "home": {
+    "tagline": "Entrenamiento en Inteligencia de Crisis",
+    "subtitle": "Prepare a sus consultores con crisis reales — 38 casos en energía, minería y salud. Simulaciones estructuradas, bilingüe, diseñado para América Latina.",
+    "stats": {
+      "cases": "Casos de Estudio",
+      "crisisTypes": "Tipos de Crisis",
+      "regions": "Regiones"
+    },
+    "features": {
+      "browse": {
+        "title": "Explorar Casos de Estudio",
+        "description": "38 crisis emblemáticas en energía, minería y salud — desde el Exxon Valdez hasta Novo Nordisk. Filtre por industria, tipo de crisis, región y calificación PR.",
+        "cta": "Ver Todos los Casos →"
+      },
+      "quiz": {
+        "title": "Simulación de Crisis",
+        "description": "Asuma el rol del consultor principal de Minerba. La IA presenta una crisis real mientras se desarrolla y desafía su toma de decisiones en tiempo real.",
+        "cta": "Elegir un Caso para Simular →"
+      },
+      "frameworks": {
+        "title": "Marcos de Minerba",
+        "description": "El Protocolo de 72 Horas, la Lista CPLI y la Lista Anti-Corrupción para Entrada al Mercado — herramientas prácticas para el sector energético latinoamericano.",
+        "cta": "Ver Marcos →"
+      }
+    },
+    "featured": "Casos Destacados",
+    "latamBadge": "Relevante para LATAM",
+    "featuredCta": "Ver Caso Completo →",
+    "startQuiz": "Simular →",
+    "frameworksSection": {
+      "title": "Marcos de Crisis de Minerba",
+      "subtitle": "Herramientas prácticas derivadas de este compendio — para compromisos reales en el sector energético latinoamericano.",
+      "protocol72": {
+        "title": "El Protocolo de 72 Horas",
+        "description": "Derivado del fracaso del Exxon Valdez. La ventana de respuesta estándar para crisis del sector energético en América Latina.",
+        "col1": "Ventana",
+        "col2": "Acción Requerida",
+        "col3": "Adaptación para América Latina",
+        "row1_window": "0–2 hrs",
+        "row1_action": "Notificar al CEO · Activar portavoz · Emitir declaración provisional",
+        "row1_latam": "Declaración primero en español/portugués · Alertar a líderes comunitarios directamente",
+        "row2_window": "2–6 hrs",
+        "row2_action": "CEO en cámara con declaración empática",
+        "row2_latam": "Video en idioma local vía WhatsApp antes de medios nacionales",
+        "row3_window": "6–24 hrs",
+        "row3_action": "Primer informe completo · Establecer cadencia dos veces por día",
+        "row3_latam": "Informar a ministerios antes de conferencia de prensa",
+        "row4_window": "24–48 hrs",
+        "row4_action": "Monitoreo independiente de terceros anunciado",
+        "row4_latam": "Involucrar universidad local u ONG como monitor — no seleccionado por la empresa",
+        "row5_window": "48–72 hrs",
+        "row5_action": "Mecanismo de apoyo comunitario comprometido públicamente",
+        "row5_latam": "CEO se reúne con comunidad afectada en su espacio, no en el de la empresa"
+      },
+      "fpic": {
+        "title": "Lista de Verificación CPLI / Consulta Previa",
+        "description": "Derivada de los Casos L1, L2, L3. Para operaciones energéticas en o cerca de territorios indígenas en América Latina.",
+        "item1": "¿Se realizó y publicó un estudio de línea base comunitaria?",
+        "item2": "¿Se inició el proceso de consulta previa al menos 12 meses antes de las operaciones?",
+        "item3": "¿Las comunidades afectadas están representadas por sus propios representantes elegidos?",
+        "item4": "¿La empresa se comprometió públicamente con el consentimiento genuino (no solo notificación)?",
+        "item5": "¿Se estableció un fondo de beneficios comunitario con supervisión independiente?",
+        "item6": "¿Los resultados del monitoreo ambiental se publican en el idioma de la comunidad?"
+      },
+      "antiCorruption": {
+        "title": "Lista Anti-Corrupción para Entrada al Mercado",
+        "description": "Derivada de los Casos 07, L2, L3. Requisitos de cumplimiento FCPA y local para entrada al mercado energético latinoamericano.",
+        "item1": "¿Evaluación de riesgo FCPA completada para todas las jurisdicciones planificadas?",
+        "item2": "¿Debida diligencia reforzada en todos los agentes locales, intermediarios y consultores?",
+        "item3": "¿Garantías anti-corrupción en todos los contratos con derechos de auditoría?",
+        "item4": "¿Evaluada la exposición a corrupción del socio estatal de energía?",
+        "item5": "¿Canal interno de reporte anti-corrupción establecido y comunicado?",
+        "item6": "¿Programa de auditoría anti-corrupción de terceros divulgado públicamente?",
+        "item7": "¿Asesoría legal multijurisdiccional para respuesta regulatoria coordinada?"
+      }
+    }
+  },
+  "cases": {
+    "title": "Casos de Estudio",
+    "subtitle": "38 crisis emblemáticas en energía, minería y salud. Filtre por industria, región o calificación PR.",
+    "filters": {
+      "all": "Todos",
+      "region": "Región",
+      "global": "Global",
+      "latinAmerica": "América Latina",
+      "crisisType": "Tipo de Crisis",
+      "environmental": "Ambiental",
+      "fraud": "Fraude / Gobernanza",
+      "corruption": "Corrupción",
+      "ngo": "Presión de ONG",
+      "humanRights": "Derechos Humanos",
+      "prRating": "Calificación PR",
+      "failed": "Fallido",
+      "mixed": "Mixto",
+      "effective": "Efectivo",
+      "clearFilters": "Limpiar filtros"
+    },
+    "readCase": "Leer Caso",
+    "startQuiz": "Simular",
+    "resultsCount": "{count} casos de estudio"
+  },
+  "case": {
+    "backToCases": "← Volver a Casos",
+    "testKnowledge": "Poner a Prueba su Conocimiento",
+    "startSimulation": "Iniciar Simulación de Crisis →",
+    "relatedCases": "Casos Relacionados",
+    "prRating": "Calificación PR",
+    "crisisType": "Tipo de Crisis",
+    "region": "Región",
+    "sector": "Sector",
+    "year": "Año",
+    "company": "Empresa",
+    "country": "País",
+    "simulateCta": "¿Listo para probarse con este caso?"
+  },
+  "quiz": {
+    "title": "Simulación de Crisis",
+    "caseContext": "Contexto del Caso",
+    "instructions": "Usted es el consultor principal de Minerba en comunicaciones de crisis. Responda a cada escenario como lo haría en un compromiso real. La IA desafiará sus decisiones y escalará la crisis.",
+    "inputPlaceholder": "Escriba su respuesta como el consultor de Minerba... (Enter para enviar, Shift+Enter para nueva línea)",
+    "sendButton": "Enviar",
+    "endDebrief": "Finalizar y Obtener Informe",
+    "debriefNote": "Finalice la simulación en cualquier momento para recibir un informe estructurado y puntuación.",
+    "facilitator": "Facilitador del Escenario",
+    "you": "Usted",
+    "backToCase": "← Volver al Caso",
+    "newSession": "Iniciar Nueva Sesión",
+    "roundLabel": "Ronda"
+  },
+  "ratings": {
+    "failed": "Respuesta Fallida",
+    "mixed": "Mixto / Recuperación Parcial",
+    "effective": "Respuesta Efectiva"
+  },
+  "common": {
+    "year": "Año",
+    "company": "Empresa",
+    "region": "Región",
+    "latam": "América Latina",
+    "global": "Global",
+    "readMore": "Leer Más",
+    "loading": "Cargando...",
+    "minerba": "MINERBA"
+  }
+}
