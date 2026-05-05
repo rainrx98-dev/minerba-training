@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import clsx from 'clsx';
 import type { Persona } from '@/lib/personas';
 
 interface Message {
@@ -135,68 +136,97 @@ export default function ChatInterface({
     }
   }
 
-  // Persona avatar label — shown next to AI messages
+  // Persona label — shown next to AI message bubbles
   const personaLabel = persona
     ? (isEs ? persona.nameEs : persona.name)
     : t('facilitator');
-  const personaIcon = persona ? persona.icon : 'M';
-  const personaBgClass = persona ? persona.bgClass : 'bg-navy-500';
-  const personaTextClass = persona ? persona.textClass : 'text-navy-500';
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Persona banner (only shown when a persona is active) */}
+
+      {/* ── Persona banner ────────────────────────────────────────────────── */}
       {persona && (
-        <div className={`shrink-0 flex items-center justify-between px-4 py-2 border-b ${persona.bgClass} ${persona.colorClass} border-b-2`}>
-          <div className="flex items-center gap-2">
-            <span className="text-base">{persona.icon}</span>
-            <div>
-              <span className={`text-xs font-bold uppercase tracking-wide ${persona.textClass}`}>
-                {isEs ? persona.nameEs : persona.name}
-              </span>
-              <span className="text-xs text-gray-500 ml-2">
-                {isEs ? persona.roleEs : persona.role}
-              </span>
+        <div className={clsx('shrink-0 border-b-2', persona.colorClass)}>
+          <div className={clsx('px-5 py-4', persona.bgClass)}>
+            <div className="flex items-center justify-between gap-4">
+              {/* Avatar + identity */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-11 h-11 rounded-full flex items-center justify-center text-xl bg-white/25 border border-white/20 shadow-inner flex-shrink-0">
+                  {persona.icon}
+                </div>
+                <div className="min-w-0">
+                  <p className={clsx('text-sm font-bold leading-tight truncate', persona.textClass)}>
+                    {isEs ? persona.nameEs : persona.name}
+                  </p>
+                  <p className={clsx('text-xs mt-0.5 opacity-60 truncate', persona.textClass)}>
+                    {isEs ? persona.roleEs : persona.role}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 opacity-75">
+                      {isEs ? 'Simulación activa' : 'Live simulation'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Change persona button */}
+              {onReset && !isDebriefMode && (
+                <button
+                  onClick={onReset}
+                  className="shrink-0 text-xs font-semibold border border-gray-200 rounded-lg px-3 py-1.5 bg-white/80 hover:bg-white text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  {isEs ? '← Cambiar' : '← Change'}
+                </button>
+              )}
             </div>
           </div>
-          {onReset && !isDebriefMode && (
-            <button
-              onClick={onReset}
-              className="text-xs text-gray-400 hover:text-gray-600 transition-colors border border-gray-200 rounded px-2 py-0.5 bg-white"
-            >
-              {isEs ? '← Cambiar perspectiva' : '← Change persona'}
-            </button>
-          )}
         </div>
       )}
 
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+      {/* ── Messages area ─────────────────────────────────────────────────── */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 min-h-0">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex message-enter ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={clsx(
+              'flex',
+              message.role === 'user' ? 'justify-end' : 'justify-start'
+            )}
           >
+            {/* AI / assistant message */}
             {message.role === 'assistant' && (
-              <div className="max-w-2xl w-full">
-                <div className="flex items-center gap-2 mb-1.5">
-                  {/* Avatar */}
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-sm ${persona ? 'bg-white border-2 ' + persona.colorClass : 'bg-navy-500'}`}>
+              <div className="max-w-[88%] w-full">
+                {/* Name + avatar row */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={clsx(
+                    'w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 shadow-sm',
+                    persona ? 'bg-white/80' : 'bg-navy-600'
+                  )}>
                     {persona
                       ? <span>{persona.icon}</span>
                       : <span className="text-white text-xs font-bold">M</span>
                     }
                   </div>
-                  <span className={`text-xs font-semibold uppercase tracking-wide ${persona ? persona.textClass : 'text-navy-600'}`}>
+                  <span className={clsx(
+                    'text-[10px] font-bold uppercase tracking-widest',
+                    persona ? persona.textClass : 'text-navy-500'
+                  )}>
                     {personaLabel}
                   </span>
                   {index === messages.length - 1 && isLoading && (
-                    <span className="text-xs text-gray-400 italic">
-                      {isEs ? 'respondiendo...' : 'responding...'}
+                    <span className="text-[10px] text-gray-400 italic animate-pulse">
+                      {isEs ? 'respondiendo…' : 'responding…'}
                     </span>
                   )}
                 </div>
-                <div className={`border rounded-lg rounded-tl-none p-4 ${persona ? persona.bgClass + ' ' + persona.colorClass.replace('border-', 'border-l-4 border-') : 'bg-gray-50 border-gray-200'}`}>
+                {/* Bubble */}
+                <div className={clsx(
+                  'rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm',
+                  persona
+                    ? persona.bgClass + ' ' + persona.colorClass.replace('border-', 'border-l-4 border-')
+                    : 'bg-gray-50 border border-gray-200'
+                )}>
                   {message.content ? (
                     <div className="case-content text-sm">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -214,17 +244,20 @@ export default function ChatInterface({
               </div>
             )}
 
+            {/* User message */}
             {message.role === 'user' && message.content !== '[DEBRIEF REQUEST]' && (
-              <div className="max-w-2xl w-full">
-                <div className="flex items-center justify-end gap-2 mb-1.5">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                    {t('you')} · {t('roundLabel')} {Math.ceil(index / 2)}
+              <div className="max-w-[88%] w-full">
+                {/* Name + avatar row */}
+                <div className="flex items-center justify-end gap-2 mb-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    {t('you')} · R{Math.ceil(index / 2)}
                   </span>
-                  <div className="w-6 h-6 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-navy-700 flex items-center justify-center flex-shrink-0 shadow-sm">
                     <span className="text-white text-xs font-bold">C</span>
                   </div>
                 </div>
-                <div className="bg-navy-500 text-white rounded-lg rounded-tr-none p-4 text-sm leading-relaxed">
+                {/* Bubble */}
+                <div className="bg-navy-700 text-white rounded-2xl rounded-tr-sm px-5 py-4 shadow-sm text-sm leading-relaxed">
                   <p className="whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
@@ -232,9 +265,10 @@ export default function ChatInterface({
           </div>
         ))}
 
+        {/* Standalone loading dots (for first response) */}
         {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
           <div className="flex justify-start">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm">
               <div className="flex gap-1.5">
                 <span className="w-2 h-2 bg-navy-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-2 h-2 bg-navy-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -246,27 +280,33 @@ export default function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area */}
+      {/* ── Input area ────────────────────────────────────────────────────── */}
       {!isDebriefMode && (
-        <div className="border-t border-gray-200 p-4 bg-white shrink-0">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-400">
-              {t('roundLabel')} {round}
+        <div className="border-t border-gray-100 px-4 pt-3 pb-4 bg-white shrink-0 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+          {/* Meta row */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 bg-navy-50 text-navy-600 text-[10px] font-bold px-2.5 py-1 rounded-full border border-navy-100">
+                <span className="w-1.5 h-1.5 rounded-full bg-navy-400 animate-pulse" />
+                {t('roundLabel')} {round}
+              </span>
               {persona && (
-                <span className={`ml-2 font-medium ${persona.textClass}`}>
-                  · {isEs ? `Hablando con ${persona.nameEs}` : `Speaking with ${persona.name}`}
+                <span className={clsx('text-[10px] font-semibold', persona.textClass)}>
+                  {'↔ '}{isEs ? persona.nameEs : persona.name}
                 </span>
               )}
-            </span>
+            </div>
             <button
               onClick={handleDebrief}
               disabled={isLoading || messages.length < 3}
-              className="text-xs text-gold hover:text-gold-dark font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="text-xs text-gold hover:text-yellow-600 font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {t('endDebrief')} →
             </button>
           </div>
-          <div className="flex gap-2">
+
+          {/* Textarea + send */}
+          <div className="flex gap-2 items-end">
             <textarea
               ref={textareaRef}
               value={input}
@@ -275,37 +315,41 @@ export default function ChatInterface({
               placeholder={
                 persona
                   ? (isEs
-                    ? `Responde a ${persona.nameEs}...`
-                    : `Respond to ${persona.name}...`)
+                    ? `Responde a ${persona.nameEs}…`
+                    : `Respond to ${persona.name}…`)
                   : t('inputPlaceholder')
               }
               disabled={isLoading}
               rows={2}
               style={{ minHeight: '64px', maxHeight: '160px' }}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2.5 text-sm resize-none overflow-y-auto focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-navy-500 disabled:opacity-50 disabled:bg-gray-50"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm resize-none overflow-y-auto focus:outline-none focus:ring-2 focus:ring-navy-400 focus:border-navy-400 disabled:opacity-50 disabled:bg-gray-100 transition-colors"
             />
             <button
               onClick={() => sendMessage(input)}
               disabled={isLoading || !input.trim()}
-              className="bg-navy-500 text-white px-4 rounded-lg hover:bg-navy-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-semibold text-sm self-end py-2.5"
+              className="bg-navy-700 text-white px-5 py-3 rounded-xl hover:bg-navy-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-bold text-sm shadow-sm self-end"
             >
               {t('sendButton')}
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-2">{t('debriefNote')}</p>
+          <p className="text-[10px] text-gray-400 mt-2">{t('debriefNote')}</p>
         </div>
       )}
 
+      {/* ── Debrief complete state ─────────────────────────────────────────── */}
       {isDebriefMode && !isLoading && (
-        <div className="border-t border-gray-200 p-4 bg-gray-50 shrink-0">
-          <p className="text-sm text-gray-500 mb-3 text-center">
-            {isEs ? 'Sesión completada.' : 'Session complete.'}
-          </p>
+        <div className="border-t border-gray-200 p-5 bg-gray-50 shrink-0">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="text-green-500 text-lg">✓</span>
+            <p className="text-sm font-semibold text-gray-700">
+              {isEs ? 'Sesión completada.' : 'Session complete.'}
+            </p>
+          </div>
           <div className="flex flex-wrap gap-2 justify-center">
             {onReset && (
               <button
                 onClick={onReset}
-                className="text-sm font-semibold border border-navy-500 text-navy-500 px-4 py-2 rounded-lg hover:bg-navy-50 transition-colors"
+                className="text-sm font-bold border border-navy-300 text-navy-600 px-4 py-2.5 rounded-xl hover:bg-navy-50 transition-colors"
               >
                 {isEs ? '← Nueva perspectiva' : '← New persona'}
               </button>
@@ -317,13 +361,13 @@ export default function ChatInterface({
                 setRound(1);
                 setIsDebriefMode(false);
               }}
-              className="text-sm font-semibold bg-navy-500 text-white px-4 py-2 rounded-lg hover:bg-navy-600 transition-colors"
+              className="text-sm font-bold bg-navy-700 text-white px-4 py-2.5 rounded-xl hover:bg-navy-600 transition-colors"
             >
               {t('newSession')}
             </button>
             <Link
               href={`/${locale}/cases`}
-              className="text-sm font-semibold border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-white transition-colors"
+              className="text-sm font-bold border border-gray-200 text-gray-600 px-4 py-2.5 rounded-xl hover:bg-white transition-colors"
             >
               {isEs ? 'Más casos →' : 'More cases →'}
             </Link>

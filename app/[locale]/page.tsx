@@ -51,58 +51,73 @@ export default async function HomePage({ params: { locale } }: { params: { local
   return (
     <div>
       {/* Hero */}
-      <section className="bg-navy-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="relative bg-navy-700 text-white overflow-hidden">
+        {/* Subtle decorative blobs */}
+        <div className="pointer-events-none absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-white/[0.03]" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full bg-white/[0.02]" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="max-w-3xl">
             {/* MINERBA white logo in hero */}
-            <div className="mb-6">
+            <div className="mb-8">
               <Image
                 src="/logo-minerba-white.png"
                 alt="MINERBA"
                 width={160}
                 height={30}
                 priority
-                className="object-contain mb-3"
+                className="object-contain mb-4"
               />
-              <div className="inline-flex items-center gap-2 bg-navy-600 border border-navy-500 rounded px-3 py-1">
+              <div className="inline-flex items-center gap-2 bg-navy-600/80 border border-navy-500/60 rounded-full px-4 py-1.5">
                 <span className="text-navy-300 text-xs font-medium tracking-wide">
                   Crisis Intelligence Training · Energy · Mining · Healthcare
                 </span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4 tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-black leading-[1.05] mb-5 tracking-tight">
               {t('tagline')}
             </h1>
-            <p className="text-navy-200 text-lg leading-relaxed mb-8 max-w-2xl">
+            <p className="text-white/70 text-lg leading-relaxed mb-10 max-w-2xl">
               {t('subtitle')}
             </p>
 
             {/* Stats row */}
-            <div className="flex flex-wrap items-center gap-6 md:gap-8">
+            <div className="flex items-center gap-8 md:gap-12 mb-10">
               <StatItem value={allCases.length} label={t('stats.cases')} />
-              <div className="hidden md:block h-8 w-px bg-navy-500" />
+              <div className="h-10 w-px bg-navy-500/60" />
               <StatItem value={crisisTypes} label={t('stats.crisisTypes')} />
-              <div className="hidden md:block h-8 w-px bg-navy-500" />
+              <div className="h-10 w-px bg-navy-500/60" />
               <StatItem value={regions} label={t('stats.regions')} />
             </div>
 
-            {/* PR outcome distribution */}
-            <div className="mt-6 flex flex-wrap gap-3">
-              {[
-                { rating: 'failed' as const, color: '#ef4444', label: locale === 'es' ? 'Respuesta fallida' : 'Failed response' },
-                { rating: 'mixed' as const, color: '#f59e0b', label: locale === 'es' ? 'Respuesta mixta' : 'Mixed response' },
-                { rating: 'effective' as const, color: '#22c55e', label: locale === 'es' ? 'Respuesta efectiva' : 'Effective response' },
-              ].map(({ rating, color, label }) => {
-                const count = allCases.filter((c) => c.pr_rating === rating).length;
-                return (
-                  <div key={rating} className="flex items-center gap-1.5 bg-navy-600/50 rounded px-2.5 py-1.5">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-                    <span className="text-xs font-bold text-white">{count}</span>
-                    <span className="text-xs text-navy-300">{label}</span>
+            {/* PR outcome distribution bar */}
+            {(() => {
+              const failedCount = allCases.filter((c) => c.pr_rating === 'failed').length;
+              const mixedCount = allCases.filter((c) => c.pr_rating === 'mixed').length;
+              const effectiveCount = allCases.filter((c) => c.pr_rating === 'effective').length;
+              const total = allCases.length;
+              return (
+                <div>
+                  <div className="flex h-2 rounded-full overflow-hidden gap-0.5 mb-3 max-w-xs">
+                    <div className="bg-crisis-red rounded-l-full" style={{ width: `${(failedCount / total) * 100}%` }} />
+                    <div className="bg-crisis-amber" style={{ width: `${(mixedCount / total) * 100}%` }} />
+                    <div className="bg-crisis-green rounded-r-full flex-1" />
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex gap-5">
+                    {[
+                      { count: failedCount, label: locale === 'es' ? 'Fallida' : 'Failed', color: 'text-red-400' },
+                      { count: mixedCount, label: locale === 'es' ? 'Mixta' : 'Mixed', color: 'text-amber-400' },
+                      { count: effectiveCount, label: locale === 'es' ? 'Efectiva' : 'Effective', color: 'text-green-400' },
+                    ].map(({ count, label, color }) => (
+                      <div key={label} className="flex items-center gap-1.5">
+                        <span className={`text-base font-black tabular-nums ${color}`}>{count}</span>
+                        <span className="text-xs text-navy-400">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       </section>
@@ -542,8 +557,8 @@ export default async function HomePage({ params: { locale } }: { params: { local
 function StatItem({ value, label }: { value: number; label: string }) {
   return (
     <div>
-      <div className="text-3xl font-bold text-white">{value}</div>
-      <div className="text-navy-300 text-xs mt-0.5">{label}</div>
+      <div className="text-4xl md:text-5xl font-black text-white tabular-nums leading-none">{value}</div>
+      <div className="text-navy-300 text-xs font-medium mt-2 leading-tight">{label}</div>
     </div>
   );
 }

@@ -24,11 +24,11 @@ export default function CaseCard({
   const ctLabels = locale === 'es' ? CRISIS_TYPE_LABELS_ES : CRISIS_TYPE_LABELS;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col">
-      {/* Header stripe */}
+    <div className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex">
+      {/* Left accent bar — PR rating colour */}
       <div
         className={clsx(
-          'h-1 w-full',
+          'w-1.5 shrink-0',
           caseItem.pr_rating === 'failed'
             ? 'bg-crisis-red'
             : caseItem.pr_rating === 'mixed'
@@ -37,35 +37,44 @@ export default function CaseCard({
         )}
       />
 
-      <div className="p-5 flex flex-col flex-1">
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5">
         {/* Top meta row */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2">
-            <span className="inline-block bg-navy-700 text-white text-xs font-bold px-2 py-0.5 rounded">
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center gap-1.5">
+            <span className="bg-navy-700 text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-wider">
               {caseItem.id}
             </span>
-            <Link
-              href={`/${locale}/industry/${industryId}`}
-              className="text-sm hover:opacity-70 transition-opacity"
-              title={industryLabel}
-            >
-              {industryIcon}
-            </Link>
             {isLatam && (
-              <span className="inline-block bg-gold text-white text-xs font-semibold px-2 py-0.5 rounded">
+              <span className="bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-200 tracking-wider">
                 LATAM
               </span>
             )}
           </div>
-          <span className="text-xs text-gray-400 whitespace-nowrap">{caseItem.year}</span>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/${locale}/industry/${industryId}`}
+              className="text-base hover:opacity-70 transition-opacity"
+              title={industryLabel}
+            >
+              {industryIcon}
+            </Link>
+            <span className="text-xs font-bold text-gray-300 tabular-nums">{caseItem.year}</span>
+          </div>
         </div>
 
-        {/* Title & company */}
-        <h3 className="text-sm font-bold text-navy-700 mb-0.5 leading-snug">{caseItem.title}</h3>
-        <p className="text-xs text-gray-500 mb-3">{caseItem.company}</p>
+        {/* Company (micro-label) */}
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+          {caseItem.company}
+        </p>
+
+        {/* Title */}
+        <h3 className="text-sm font-bold text-navy-700 leading-snug mb-3 group-hover:text-navy-500 transition-colors">
+          {caseItem.title}
+        </h3>
 
         {/* Summary */}
-        <p className="text-xs text-gray-600 leading-relaxed mb-4 flex-1 line-clamp-3">
+        <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-3">
           {caseItem.summary}
         </p>
 
@@ -74,7 +83,7 @@ export default function CaseCard({
           {caseItem.crisis_type.slice(0, 2).map((ct) => (
             <span
               key={ct}
-              className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-200"
+              className="text-[10px] font-medium text-gray-500 bg-gray-50 px-2 py-0.5 rounded-full border border-gray-200"
             >
               {ctLabels[ct] ?? ct}
             </span>
@@ -87,18 +96,18 @@ export default function CaseCard({
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-2 mt-auto">
+        <div className="flex gap-2 pt-3 border-t border-gray-100">
           <Link
             href={`/${locale}/cases/${caseItem.id}`}
-            className="flex-1 text-center text-xs font-semibold bg-navy-500 text-white py-2 px-3 rounded hover:bg-navy-600 transition-colors"
+            className="flex-1 text-center text-xs font-bold bg-navy-700 text-white py-2.5 px-3 rounded-lg hover:bg-navy-600 transition-colors"
           >
             {readLabel}
           </Link>
           <Link
             href={`/${locale}/quiz/${caseItem.id}`}
-            className="flex-1 text-center text-xs font-semibold border border-navy-500 text-navy-500 py-2 px-3 rounded hover:bg-navy-50 transition-colors"
+            className="flex-1 text-center text-xs font-bold text-amber-700 py-2.5 px-3 rounded-lg bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors"
           >
-            {quizLabel}
+            ⚡ {quizLabel}
           </Link>
         </div>
       </div>
