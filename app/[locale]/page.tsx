@@ -56,7 +56,7 @@ export default async function HomePage({ params: { locale } }: { params: { local
         <div className="pointer-events-none absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-white/[0.03]" />
         <div className="pointer-events-none absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full bg-white/[0.02]" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 lg:pt-28 pb-16">
           <div className="max-w-3xl">
             {/* MINERBA white logo in hero */}
             <div className="mb-8">
@@ -123,7 +123,8 @@ export default async function HomePage({ params: { locale } }: { params: { local
       </section>
 
       {/* Feature cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+      <section className="bg-white relative z-10 border-t border-gray-100 pt-10 pb-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <FeatureCard
             icon="⚡"
@@ -213,6 +214,7 @@ export default async function HomePage({ params: { locale } }: { params: { local
             cta={locale === 'es' ? 'Conocer a los adversarios →' : 'Meet the adversaries →'}
             href={`/${locale}/personas`}
           />
+        </div>
         </div>
       </section>
 
