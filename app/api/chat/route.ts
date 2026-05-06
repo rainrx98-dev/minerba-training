@@ -49,30 +49,67 @@ The company waited too long, issued contradictory statements, and never establis
 **The 72-Hour Protocol** — specifically the 24–48 hour window on independent monitoring and the Latin America adaptation requiring government ministry briefings before press conferences. Review it on the Home page under Minerba Frameworks.`,
 };
 
-function getDemoResponse(messageCount: number, isDebrief: boolean, locale: string): string {
+function classifyResponse(text: string): 'gibberish' | 'vague' | 'ok' {
+  const trimmed = text.trim();
+  if (!trimmed || trimmed.length < 10) return 'gibberish';
+
+  // Count real English/Spanish words (3+ chars, mostly alphabetic)
+  const tokens = trimmed.split(/\s+/);
+  const realWords = tokens.filter((w) => /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ]{3,}$/.test(w));
+  const realWordRatio = realWords.length / Math.max(tokens.length, 1);
+
+  // If fewer than 40% of tokens are real words → gibberish
+  if (realWordRatio < 0.4 || realWords.length < 3) return 'gibberish';
+
+  // If the answer is very short and uses only filler phrases → vague
+  const vaguePatterns = /^(i (would|will|can|should)|we (should|will|need|must)|gather|assess|investigate|look into|monitor|wait|see what|think about|consider|analyze|review|get more)/i;
+  if (realWords.length < 20 && vaguePatterns.test(trimmed)) return 'vague';
+
+  return 'ok';
+}
+
+function getDemoResponse(messageCount: number, isDebrief: boolean, locale: string, lastUserMessage: string): string {
+  const isEs = locale === 'es';
+  const demoNote = isEs
+    ? '\n\n---\n*⚠ Modo demo — agrega tu clave de Anthropic en `.env.local` para evaluaciones de IA en tiempo real.*'
+    : '\n\n---\n*⚠ Demo mode — add your Anthropic API key to `.env.local` for real-time AI evaluation.*';
+
   if (isDebrief) {
-    return locale === 'es'
+    return isEs
       ? `## Informe de la Sesión\n\n**Rendimiento General: ★★★☆☆**\n\nEsta es una respuesta de demostración. Para obtener evaluaciones de IA en tiempo real y escenarios de crisis dinámicos, agregue su clave de API de Anthropic en \`.env.local\`.\n\nConecte su clave en \`console.anthropic.com\` — el costo estimado es de $3–10/mes para el equipo de Minerba.`
       : DEMO_RESPONSES.debrief as string;
   }
 
+  const quality = classifyResponse(lastUserMessage);
+
+  if (quality === 'gibberish') {
+    const msg = isEs
+      ? `✗ DEFICIENTE — Esa respuesta no constituye una recomendación de comunicaciones de crisis.\n\nEso no es una respuesta coherente. En una sala de crisis real, enviar texto incoherente cuando el CEO está esperando orientación terminaría con tu contrato de inmediato.\n\n**Intenta de nuevo.** Responde a la pregunta inicial con al menos: (1) quién habla públicamente y cuándo, (2) si el CEO debe estar físicamente presente, y (3) si emites un comunicado antes de tener todos los hechos.`
+      : `✗ POOR — That response does not constitute a crisis communications recommendation.\n\nIncoherent text is not an answer. In a real crisis room, submitting gibberish while a CEO waits for guidance ends your engagement immediately.\n\n**Try again.** Address the opening question with at least: (1) who speaks publicly and when, (2) whether the CEO needs to be physically on-site, and (3) whether you issue a statement before you have full facts.`;
+    return msg + demoNote;
+  }
+
+  if (quality === 'vague') {
+    const msg = isEs
+      ? `⚠ PARCIAL — Reconoces la urgencia, pero tu recomendación es demasiado vaga para actuar.\n\n"Recopilar información" y "evaluar la situación" no son decisiones de comunicación de crisis — son retrasos. La pregunta no es *si* actuar; es *cómo actuar ahora mismo*.\n\nSé específico: ¿quién es el único portavoz? ¿Cuál es el comunicado provisional? ¿Va el CEO al sitio o no?`
+      : `⚠ PARTIAL — You've recognized the urgency but your recommendation is too vague to act on.\n\n"Gather information" and "assess the situation" are not crisis communications decisions — they are delays. The question is not *whether* to act; it's *how to act right now*.\n\nBe specific: who is the single spokesperson, what is the holding statement, does the CEO go on-site or not?`;
+    return msg + demoNote;
+  }
+
+  // Reasonable answer → return scripted escalation
   const responses = DEMO_RESPONSES.default as string[];
   const index = Math.min(Math.floor((messageCount - 1) / 2), responses.length - 1);
-  const base = responses[index];
-
-  if (locale === 'es') {
-    return `*[Modo de demostración — respuesta en inglés. Agregue su clave API de Anthropic para respuestas en español en tiempo real.]*\n\n${base}`;
-  }
-  return base;
+  return responses[index] + demoNote;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const { messages, caseId, isDebrief, locale, personaId } = await req.json();
 
-    // DEMO MODE: If no API key, return pre-scripted responses
+    // DEMO MODE: If no API key, return evaluated responses
     if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'sk-ant-api03-your-key-here') {
-      const demoText = getDemoResponse(messages.length, isDebrief ?? false, locale ?? 'en');
+      const lastUserMsg: string = [...messages].reverse().find((m: { role: string; content: string }) => m.role === 'user')?.content ?? '';
+      const demoText = getDemoResponse(messages.length, isDebrief ?? false, locale ?? 'en', lastUserMsg);
       const encoder = new TextEncoder();
       const readable = new ReadableStream({
         async start(controller) {
