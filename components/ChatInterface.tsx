@@ -185,7 +185,8 @@ export default function ChatInterface({
       )}
 
       {/* ── Messages area ─────────────────────────────────────────────────── */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-5 min-h-0">
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <div className="max-w-2xl mx-auto px-5 py-6 space-y-5">
         {messages.map((message, index) => (
           <div
             key={index}
@@ -196,7 +197,7 @@ export default function ChatInterface({
           >
             {/* AI / assistant message */}
             {message.role === 'assistant' && (
-              <div className="max-w-[88%] w-full">
+              <div className="w-full">
                 {/* Name + avatar row */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className={clsx(
@@ -246,7 +247,7 @@ export default function ChatInterface({
 
             {/* User message */}
             {message.role === 'user' && message.content !== '[DEBRIEF REQUEST]' && (
-              <div className="max-w-[88%] w-full">
+              <div className="max-w-[72%]">
                 {/* Name + avatar row */}
                 <div className="flex items-center justify-end gap-2 mb-2">
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
@@ -278,11 +279,13 @@ export default function ChatInterface({
           </div>
         )}
         <div ref={messagesEndRef} />
+        </div>{/* end max-w-2xl */}
       </div>
 
       {/* ── Input area ────────────────────────────────────────────────────── */}
       {!isDebriefMode && (
-        <div className="border-t border-gray-100 px-4 pt-3 pb-4 bg-white shrink-0 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+        <div className="border-t border-gray-100 bg-white shrink-0 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]">
+          <div className="max-w-2xl mx-auto px-5 pt-3 pb-4">
           {/* Meta row */}
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -333,12 +336,14 @@ export default function ChatInterface({
             </button>
           </div>
           <p className="text-[10px] text-gray-400 mt-2">{t('debriefNote')}</p>
+          </div>{/* end max-w-2xl */}
         </div>
       )}
 
       {/* ── Debrief complete state ─────────────────────────────────────────── */}
       {isDebriefMode && !isLoading && (
-        <div className="border-t border-gray-200 p-5 bg-gray-50 shrink-0">
+        <div className="border-t border-gray-200 bg-gray-50 shrink-0">
+        <div className="max-w-2xl mx-auto p-5">
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="text-green-500 text-lg">✓</span>
             <p className="text-sm font-semibold text-gray-700">
@@ -372,6 +377,7 @@ export default function ChatInterface({
               {isEs ? 'Más casos →' : 'More cases →'}
             </Link>
           </div>
+        </div>{/* end max-w-2xl */}
         </div>
       )}
     </div>
