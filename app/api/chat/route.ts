@@ -1,8 +1,12 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Groq from 'groq-sdk';
 import { NextRequest } from 'next/server';
 import { buildSystemPrompt } from '@/lib/quiz-prompts';
 
-const anthropic = new Anthropic();
+// Groq client — free API key at console.groq.com, supports Llama 3.3 70B
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY ?? '' });
+
+// Model to use — llama-3.3-70b-versatile is free on Groq's free tier
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
 
 // --- DEMO MODE RESPONSES (used when no API key is configured) ---
 const DEMO_RESPONSES: Record<string, string | string[]> = {
@@ -35,33 +39,31 @@ You demonstrated solid instincts on speed and stakeholder management, with room 
 2. **Understood the CEO's symbolic role** — advising on CEO visibility shows awareness of executive communications as a strategic function.
 
 ### Two Things to Improve
-1. **Government relations must come before press** — In LatAm energy markets, the Environment Ministry, the regional governor, and the community liaison all need to be briefed *before* you face the press. This is the most common gap in market-entry crisis planning.
-2. **Independent monitoring is a non-negotiable** — Your own data will always be suspected. Engage a local university, NGO, or international body as the public source of environmental figures. This is what the 72-Hour Protocol prescribes for hours 24–48.
+1. **Government relations must come before press** — In LatAm energy markets, the Environment Ministry, the regional governor, and the community liaison all need to be briefed *before* you face the press.
+2. **Independent monitoring is a non-negotiable** — Your own data will always be suspected. Engage a local university, NGO, or international body as the public source of environmental figures.
 
 ---
 
 ### What Actually Happened in the Real Case
-The company waited too long, issued contradictory statements, and never established independent monitoring. The result was a prolonged media crisis that destroyed the brand's credibility and triggered regulatory action that cost multiples more than immediate transparent response would have.
+The company waited too long, issued contradictory statements, and never established independent monitoring. The result was a prolonged media crisis that destroyed the brand's credibility and triggered regulatory action.
 
 ---
 
 ### Framework to Review
-**The 72-Hour Protocol** — specifically the 24–48 hour window on independent monitoring and the Latin America adaptation requiring government ministry briefings before press conferences. Review it on the Home page under Minerba Frameworks.`,
+**The 72-Hour Protocol** — specifically the 24–48 hour window on independent monitoring and the Latin America adaptation requiring government ministry briefings before press conferences.`,
 };
 
+// ── Response quality classifier (for demo mode) ──────────────────────────────
 function classifyResponse(text: string): 'gibberish' | 'vague' | 'ok' {
   const trimmed = text.trim();
   if (!trimmed || trimmed.length < 10) return 'gibberish';
 
-  // Count real English/Spanish words (3+ chars, mostly alphabetic)
   const tokens = trimmed.split(/\s+/);
   const realWords = tokens.filter((w) => /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ]{3,}$/.test(w));
   const realWordRatio = realWords.length / Math.max(tokens.length, 1);
 
-  // If fewer than 40% of tokens are real words → gibberish
   if (realWordRatio < 0.4 || realWords.length < 3) return 'gibberish';
 
-  // If the answer is very short and uses only filler phrases → vague
   const vaguePatterns = /^(i (would|will|can|should)|we (should|will|need|must)|gather|assess|investigate|look into|monitor|wait|see what|think about|consider|analyze|review|get more)/i;
   if (realWords.length < 20 && vaguePatterns.test(trimmed)) return 'vague';
 
@@ -71,12 +73,12 @@ function classifyResponse(text: string): 'gibberish' | 'vague' | 'ok' {
 function getDemoResponse(messageCount: number, isDebrief: boolean, locale: string, lastUserMessage: string): string {
   const isEs = locale === 'es';
   const demoNote = isEs
-    ? '\n\n---\n*⚠ Modo demo — agrega tu clave de Anthropic en `.env.local` para evaluaciones de IA en tiempo real.*'
-    : '\n\n---\n*⚠ Demo mode — add your Anthropic API key to `.env.local` for real-time AI evaluation.*';
+    ? '\n\n---\n*⚠ Modo demo — agrega tu clave de Groq en `.env.local` (GROQ_API_KEY) para evaluaciones en tiempo real con Llama 3.3.*'
+    : '\n\n---\n*⚠ Demo mode — add your free Groq API key to `.env.local` (GROQ_API_KEY) for real-time Llama 3.3 evaluation.*';
 
   if (isDebrief) {
     return isEs
-      ? `## Informe de la Sesión\n\n**Rendimiento General: ★★★☆☆**\n\nEsta es una respuesta de demostración. Para obtener evaluaciones de IA en tiempo real y escenarios de crisis dinámicos, agregue su clave de API de Anthropic en \`.env.local\`.\n\nConecte su clave en \`console.anthropic.com\` — el costo estimado es de $3–10/mes para el equipo de Minerba.`
+      ? `## Informe de la Sesión\n\n**Rendimiento General: ★★★☆☆**\n\nEsta es una respuesta de demostración. Para evaluaciones de IA en tiempo real, agrega tu clave gratuita de Groq en \`.env.local\` como \`GROQ_API_KEY\`.\n\nObtén tu clave gratis en **console.groq.com** — sin tarjeta de crédito.`
       : DEMO_RESPONSES.debrief as string;
   }
 
@@ -84,40 +86,40 @@ function getDemoResponse(messageCount: number, isDebrief: boolean, locale: strin
 
   if (quality === 'gibberish') {
     const msg = isEs
-      ? `✗ DEFICIENTE — Esa respuesta no constituye una recomendación de comunicaciones de crisis.\n\nEso no es una respuesta coherente. En una sala de crisis real, enviar texto incoherente cuando el CEO está esperando orientación terminaría con tu contrato de inmediato.\n\n**Intenta de nuevo.** Responde a la pregunta inicial con al menos: (1) quién habla públicamente y cuándo, (2) si el CEO debe estar físicamente presente, y (3) si emites un comunicado antes de tener todos los hechos.`
-      : `✗ POOR — That response does not constitute a crisis communications recommendation.\n\nIncoherent text is not an answer. In a real crisis room, submitting gibberish while a CEO waits for guidance ends your engagement immediately.\n\n**Try again.** Address the opening question with at least: (1) who speaks publicly and when, (2) whether the CEO needs to be physically on-site, and (3) whether you issue a statement before you have full facts.`;
+      ? `✗ DEFICIENTE — Esa respuesta no constituye una recomendación de comunicaciones de crisis.\n\nEso no es una respuesta coherente. En una sala de crisis real, enviar texto incoherente cuando el CEO espera orientación terminaría tu contrato de inmediato.\n\n**Intenta de nuevo.** Responde con al menos: (1) quién habla públicamente y cuándo, (2) si el CEO debe estar físicamente presente, y (3) si emites un comunicado antes de tener todos los hechos.`
+      : `✗ POOR — That response does not constitute a crisis communications recommendation.\n\nIncoherent text is not an answer. In a real crisis room, submitting gibberish while a CEO waits for guidance ends your engagement immediately.\n\n**Try again.** Address at least: (1) who speaks publicly and when, (2) whether the CEO needs to be physically on-site, and (3) whether you issue a statement before having full facts.`;
     return msg + demoNote;
   }
 
   if (quality === 'vague') {
     const msg = isEs
-      ? `⚠ PARCIAL — Reconoces la urgencia, pero tu recomendación es demasiado vaga para actuar.\n\n"Recopilar información" y "evaluar la situación" no son decisiones de comunicación de crisis — son retrasos. La pregunta no es *si* actuar; es *cómo actuar ahora mismo*.\n\nSé específico: ¿quién es el único portavoz? ¿Cuál es el comunicado provisional? ¿Va el CEO al sitio o no?`
-      : `⚠ PARTIAL — You've recognized the urgency but your recommendation is too vague to act on.\n\n"Gather information" and "assess the situation" are not crisis communications decisions — they are delays. The question is not *whether* to act; it's *how to act right now*.\n\nBe specific: who is the single spokesperson, what is the holding statement, does the CEO go on-site or not?`;
+      ? `⚠ PARCIAL — Reconoces la urgencia, pero tu recomendación es demasiado vaga para ejecutar.\n\n"Recopilar información" no es una decisión de comunicación de crisis — es un retraso. La pregunta no es *si* actuar; es *cómo actuar ahora mismo*.\n\nSé específico: ¿quién es el único portavoz? ¿Cuál es el comunicado provisional? ¿Va el CEO al sitio o no?`
+      : `⚠ PARTIAL — You've recognized the urgency but your recommendation is too vague to act on.\n\n"Gather information" is not a crisis communications decision — it is a delay. The question is not *whether* to act; it's *how to act right now*.\n\nBe specific: who is the single spokesperson, what is the holding statement, does the CEO go on-site or not?`;
     return msg + demoNote;
   }
 
-  // Reasonable answer → return scripted escalation
   const responses = DEMO_RESPONSES.default as string[];
   const index = Math.min(Math.floor((messageCount - 1) / 2), responses.length - 1);
   return responses[index] + demoNote;
 }
 
+// ── Main API handler ──────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
     const { messages, caseId, isDebrief, locale, personaId } = await req.json();
 
-    // DEMO MODE: If no API key, return evaluated responses
-    if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'sk-ant-api03-your-key-here') {
-      const lastUserMsg: string = [...messages].reverse().find((m: { role: string; content: string }) => m.role === 'user')?.content ?? '';
+    // DEMO MODE — no key configured
+    const hasKey = process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'your-groq-api-key-here';
+    if (!hasKey) {
+      const lastUserMsg: string =
+        [...messages].reverse().find((m: { role: string; content: string }) => m.role === 'user')?.content ?? '';
       const demoText = getDemoResponse(messages.length, isDebrief ?? false, locale ?? 'en', lastUserMsg);
       const encoder = new TextEncoder();
       const readable = new ReadableStream({
         async start(controller) {
-          // Simulate streaming by chunking the response
           const words = demoText.split(' ');
           for (let i = 0; i < words.length; i += 3) {
-            const chunk = words.slice(i, i + 3).join(' ') + ' ';
-            controller.enqueue(encoder.encode(chunk));
+            controller.enqueue(encoder.encode(words.slice(i, i + 3).join(' ') + ' '));
             await new Promise((r) => setTimeout(r, 20));
           }
           controller.close();
@@ -128,32 +130,30 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // LIVE MODE — Groq + Llama 3.3 70B
     const systemPrompt = buildSystemPrompt(caseId, isDebrief ?? false, personaId, locale);
 
-    // Filter out any [DEBRIEF REQUEST] user messages for the actual API call
     const apiMessages = messages
       .filter((m: { role: string; content: string }) => m.content !== '[DEBRIEF REQUEST]')
-      .slice(-10); // Keep last 10 messages to manage context
+      .slice(-10);
 
-    const stream = await anthropic.messages.stream({
-      model: 'claude-opus-4-6',
+    const stream = await groq.chat.completions.create({
+      model: GROQ_MODEL,
       max_tokens: isDebrief ? 1500 : 800,
-      system: systemPrompt,
-      messages: apiMessages,
+      stream: true,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...apiMessages,
+      ],
     });
 
     const encoder = new TextEncoder();
-
     const readable = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of stream) {
-            if (
-              chunk.type === 'content_block_delta' &&
-              chunk.delta.type === 'text_delta'
-            ) {
-              controller.enqueue(encoder.encode(chunk.delta.text));
-            }
+            const text = chunk.choices[0]?.delta?.content ?? '';
+            if (text) controller.enqueue(encoder.encode(text));
           }
         } catch (err) {
           controller.error(err);
@@ -172,8 +172,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Chat API error:', error);
-    const message =
-      error instanceof Error ? error.message : 'Internal server error';
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return new Response(message, { status: 500 });
   }
 }
